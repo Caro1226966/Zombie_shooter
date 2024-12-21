@@ -89,7 +89,11 @@ class Player(p.sprite.Sprite):
 
     def handle_flags(self, dt):
         # Shoot cooldown
-        if
+        if not self.can_shoot:
+            self.shoot_time += dt
+        if self.shoot_time >= SHOOT_COOLDOWN:
+            self.can_shoot = True
+            self.shoot_time = 0
 
     def inputs(self, dt):
         # Player Controls
@@ -107,10 +111,10 @@ class Player(p.sprite.Sprite):
             self.rect.y += PLAYER_SPEED
 
         # Shooting
-        if mouse[0]:
+        if mouse[0] and self.can_shoot:
+            self.can_shoot = False
 
             destination_x, destination_y = p.mouse.get_pos()
-
             bullet = Bullet(self.rect.x, self.rect.y, destination_x, destination_y, game=self.game)
             self.game.all_sprites.add(bullet)
             self.game.all_bullets.add(bullet)

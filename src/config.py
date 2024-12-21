@@ -21,6 +21,6 @@ p.display.set_caption('Zombie Shooter')
 
 PLAYER_SPEED = SCREEN_WIDTH / 3000
 BULLET_LIFESPAN = 5
-SHOOT_COOLDOWN = 0.5
+SHOOT_COOLDOWN = 0.2
 
 
