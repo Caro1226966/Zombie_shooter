@@ -1,6 +1,54 @@
 from config import *
 
 
+class Bullet(p.sprite.Sprite):
+    def __init__(self, start_x, start_y, dest_x, dest_y, game):
+        super(Bullet, self).__init__()
+
+        # Bullet image
+        self.image = p.Surface((SCREEN_WIDTH / 100, SCREEN_HEIGHT / 80))
+        self.image.fill((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (start_x, start_y)
+
+        # Because rect.x and rect.y are automatically converted
+        # to integers, we need to create different variables that
+        # store the location as floating point numbers. Integers
+        # are not accurate enough for aiming.
+        self.floating_point_x = start_x
+        self.floating_point_y = start_y
+
+        # Calculation the angle in radians between the start points
+        # and end points. This is the angle the bullet will travel.
+        x_diff = dest_x - start_x
+        y_diff = dest_y - start_y
+        angle = math.atan2(y_diff, x_diff)
+
+        # Taking into account the angle, calculate our change_x
+        # and change_y. Velocity is how fast the bullet travels.
+        velocity = 5
+        self.change_x = math.cos(angle) * velocity
+        self.change_y = math.sin(angle) * velocity
+
+        self.bullet_life = 0
+
+        self.game = game
+
+    def update(self, dt):
+        # The floating point x and y hold our more accurate location.
+        self.floating_point_y += self.change_y
+        self.floating_point_x += self.change_x
+
+        # The rect.x and rect.y are converted to integers.
+        self.rect.y = int(self.floating_point_y)
+        self.rect.x = int(self.floating_point_x)
+
+        self.bullet_life += dt
+        if self.bullet_life >= BULLET_LIFESPAN:
+            # This removes the bullet from all sprites and stops updating
+            self.game.all_sprites.remove(self)
+
+
 # This is the player
 class Player(p.sprite.Sprite):
     def __init__(self, x, y, game, health=20):
@@ -15,6 +63,10 @@ class Player(p.sprite.Sprite):
         self.image.fill((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+
+        # Shooting
+        self.can_shoot = True
+        self.shoot_time = 0
 
         # self.image = game.loader.get_image("purple_player")
 
@@ -36,7 +88,8 @@ class Player(p.sprite.Sprite):
             self.rect.top = 0
 
     def handle_flags(self, dt):
-        pass
+        # Shoot cooldown
+        if
 
     def inputs(self, dt):
         # Player Controls
@@ -52,6 +105,15 @@ class Player(p.sprite.Sprite):
             self.rect.x += PLAYER_SPEED
         if keys[p.K_s]:
             self.rect.y += PLAYER_SPEED
+
+        # Shooting
+        if mouse[0]:
+
+            destination_x, destination_y = p.mouse.get_pos()
+
+            bullet = Bullet(self.rect.x, self.rect.y, destination_x, destination_y, game=self.game)
+            self.game.all_sprites.add(bullet)
+            self.game.all_bullets.add(bullet)
 
     def movement(self, dt):
         pass

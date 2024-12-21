@@ -59,6 +59,7 @@ class Manager:
 
         # Sprite groups
         self.all_sprites = p.sprite.Group()
+        self.all_bullets = p.sprite.Group()
 
         # Variables
         self.death = False
