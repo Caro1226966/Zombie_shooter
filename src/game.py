@@ -1,4 +1,5 @@
 from config import *
+from sprites import Player
 
 
 # TODO list
@@ -63,6 +64,15 @@ class Manager:
         self.death = False
         self.game = game
 
+        self.create_level()
+
+    def create_level(self):
+        # These are the players
+        self.player = Player(SCREEN_HEIGHT / 1.1, SCREEN_WIDTH / 4, self)
+
+        # Sprite group addition
+        self.all_sprites.add(self.player)
+
     # This updates everything
     def update(self, dt):
         self.all_sprites.update(dt)
@@ -81,6 +91,8 @@ class Manager:
 
 class Game:
     def __init__(self):
+
+        self.loader = ResourceLoader()
 
         # This creates the clock
         self.clock = p.time.Clock()
@@ -129,8 +141,9 @@ class Game:
 
     # This draws the screen
     def draw(self, screen, manager):
-        # bg = self.loader.get_image("Flowery_meadows")
-        screen.fill((0, 0, 0))
+        bg = self.loader.get_image("Flowery_meadows")
+        bg = p.transform.scale(bg, BG_IMAGE_SIZE)
+        screen.blit(bg, (0, 0))
         self.state.draw(screen)
         p.display.update()
 
