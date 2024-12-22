@@ -3,12 +3,18 @@ from sprites import Player
 
 
 # TODO list
-# 1. make background (repeating images 'n shi')
-# 2. make player and movement
-# 3. make zombies
-# 4. make zombies go to player and attack them (health for player)
-# 5. make a gun that shoots bullets to kill zombies
-# 6. enjoy
+# 1. make background #DONE
+# 2. make player and movement #FIXME
+# 3. make zombies that randomly spawn on screen #DONE
+# 4. make zombies go to player and attack them (health for player) #DONE
+# 5. make a gun that shoots bullets to kill zombies #DONE
+# 7. Fix art
+# 6. enjoy #DONE
+
+
+# Problems list :(
+# Diagonal movement is faster
+# Shooting comes from the topleft
 
 
 class ResourceLoader:
@@ -60,6 +66,8 @@ class Manager:
         # Sprite groups
         self.all_sprites = p.sprite.Group()
         self.all_bullets = p.sprite.Group()
+        self.all_zombies = p.sprite.Group()
+        self.all_players = p.sprite.Group()
 
         # Variables
         self.death = False
@@ -73,6 +81,7 @@ class Manager:
 
         # Sprite group addition
         self.all_sprites.add(self.player)
+        self.all_players.add(self.player)
 
     # This updates everything
     def update(self, dt):
@@ -84,6 +93,22 @@ class Manager:
     # This draws the screen
     def draw(self, screen):
         self.all_sprites.draw(screen)
+
+        p.font.init()  # you have to call this at the start,
+        # if you want to use this module.
+        my_font = p.font.SysFont('Comic Sans MS', 50)
+
+        display_text = 'Health: ' + str(self.player.health)
+        text_surface = my_font.render(display_text, False, (0, 0, 0))
+        screen.blit(text_surface, (0, 0))
+
+        p.font.init()  # you have to call this at the start,
+        # if you want to use this module.
+        my_font = p.font.SysFont('Comic Sans MS', 50)
+
+        display_text = 'Score: ' + str(self.player.score)
+        text_surface = my_font.render(display_text, False, (0, 0, 0))
+        screen.blit(text_surface, (SCREEN_WIDTH - SCREEN_WIDTH / 5, 0))
 
     # This updates and handles the events
     def events(self):
@@ -145,6 +170,7 @@ class Game:
         bg = self.loader.get_image("Flowery_meadows")
         bg = p.transform.scale(bg, BG_IMAGE_SIZE)
         screen.blit(bg, (0, 0))
+
         self.state.draw(screen)
         p.display.update()
 
