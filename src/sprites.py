@@ -170,6 +170,8 @@ class Player(p.sprite.Sprite):
             self.rect.right = SCREEN_WIDTH
 
         if self.rect.top < 0:
+            self.rect.bottom = SCREEN_HEIGHT
+        if self.rect.bottom > SCREEN_HEIGHT:
             self.rect.top = 0
 
     def handle_flags(self, dt):
